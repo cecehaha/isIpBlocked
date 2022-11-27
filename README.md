@@ -66,3 +66,10 @@ crontab -e
 ```
 
 注意：`/root/isIpBlocked` 需要是 `isIpBlocked` 的绝对路径
+
+# 说明
+被墙主要有：
+1. 端口被墙：表现为某些端口（比如80，443）的国外节点 tcp 通但国内 tcp 不通，如果服务器没有禁ping的话国内外都能ping通
+2. 整个IP被墙：表现为国内ping tcp都不通，国外都通
+
+当然这个检测需要你本身没有禁ping和开放了tcp端口。
