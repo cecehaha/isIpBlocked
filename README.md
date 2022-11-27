@@ -12,7 +12,7 @@ wget -O isIpBlocked https://github.com/cecehaha/isIpBlocked/releases/latest/down
 > 其他架构系统看 [release](https://github.com/cecehaha/isIpBlocked/releases/latest) 中有没有，没有可自行编译
 
 # 配置
-下载配置文件：
+下载配置文件到 `isIpBlocked` 同目录：
 ```bash
 wget -O .env https://raw.githubusercontent.com/cecehaha/isIpBlocked/main/.env.example
 ```
@@ -48,3 +48,21 @@ TG_CHAT_ID=""
 
 - TG_BOT_TOKEN: 可以去 [@botFather](https://t.me/botFather) 处新建机器人来获取机器人的token
 - TG_CHAT_ID: 可以去 [@userinfobot](https://t.me/userinfobot) 处来获取自己的账号ID，并填入
+
+# 运行
+直接运行来测试一下：
+```bash
+./isIpBlocked
+```
+
+设置定时任务：
+```bash
+crontab -e
+```
+
+之后编辑文件加入（每五分钟执行一次）：
+```bash
+*/5 * * * * /root/isIpBlocked
+```
+
+注意：`/root/isIpBlocked` 需要是 `isIpBlocked` 的绝对路径
