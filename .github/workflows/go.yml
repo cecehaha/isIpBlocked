@@ -57,7 +57,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        files: isIpBlocked_${{ matrix.goos }}_${{ matrix.goarch }}
+        upload_url: ${{ needs.release.outputs.upload_url }}
+        asset_path: isIpBlocked_${{ matrix.goos }}_${{ matrix.goarch }}
         asset_name: isIpBlocked_${{ matrix.goos }}_${{ matrix.goarch }}
         asset_content_type: application/octet-stream
