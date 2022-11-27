@@ -4,26 +4,11 @@
 name: Go
 
 on:
-  push:
-    tags:
-      - v*
+  release:
+    types:
+    - created
 
 jobs:
-  release:
-      runs-on: ubuntu-latest
-      outputs:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-      steps:
-        - name: Create Release
-          id: create_release
-          uses: actions/create-release@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          with:
-            tag_name: ${{ github.ref }}
-            release_name: gocapture ${{ github.ref }}
-            draft: false
-            prerelease: false
   build:
     strategy:
       matrix:
@@ -58,7 +43,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
-        upload_url: ${{ needs.release.outputs.upload_url }}
+        upload_url: ${{ github.event.release.upload_url }}
         files: isIpBlocked_${{ matrix.goos }}_${{ matrix.goarch }}
         asset_name: isIpBlocked_${{ matrix.goos }}_${{ matrix.goarch }}
         asset_content_type: application/octet-stream
