@@ -5,13 +5,37 @@ name: Go
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - v*
 
 jobs:
-
+  release:
+      runs-on: ubuntu-latest
+      outputs:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+      steps:
+        - name: Create Release
+          id: create_release
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          with:
+            tag_name: ${{ github.ref }}
+            release_name: gocapture ${{ github.ref }}
+            draft: false
+            prerelease: false
   build:
+    strategy:
+      matrix:
+        include:
+          - goarch: amd64
+            goos: linux
+          - goarch: amd64
+            goos: darwin
+          - goarch: arm64
+            goos: linux
+          - goarch: arm64
+            goos: darwin
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -21,8 +45,20 @@ jobs:
       with:
         go-version: 1.18
 
-    - name: Build amd64
-      run: GOOS="linux" GOARCH="amd64" go build -o isIpBlocked_linux_amd64
+    - name: Build
+      run: go build -o isIpBlocked
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+    - name: rename
+      run: mv isIpBlocked isIpBlocked_${{ matrix.goos }}_${{ matrix.goarch }}
       
-    - name: Build arm64
-      run: GOOS="linux" GOARCH="arm64" go build -o isIpBlocked_linux_arm64
+    - name: upload
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      with:
+        upload_url: ${{ needs.release.outputs.upload_url }}
+        files: isIpBlocked_${{ matrix.goos }}_${{ matrix.goarch }}
+        asset_name: isIpBlocked_${{ matrix.goos }}_${{ matrix.goarch }}
+        asset_content_type: application/octet-stream
