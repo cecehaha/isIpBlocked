@@ -14,7 +14,7 @@ wget -O isIpBlocked https://github.com/cecehaha/isIpBlocked/releases/latest/down
 # 配置
 下载配置文件到 `isIpBlocked` 同目录：
 ```bash
-wget -O .env https://raw.githubusercontent.com/cecehaha/isIpBlocked/main/.env.example
+wget https://raw.githubusercontent.com/cecehaha/isIpBlocked/main/.env.example && cp .env.example .env
 ```
 
 编辑配置文件：
